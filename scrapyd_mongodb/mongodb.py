@@ -2,17 +2,18 @@
 
 import json
 import pymongo
+from os import getenv
 from configparser import NoOptionError
 
 
 class MongoDBPriorityQueue(object):
 
     def __init__(self, config, collection):
-        database_name = config.get('mongodb_name', 'scrapyd_mongodb')
-        database_host = config.get('mongodb_host', 'localhost')
-        database_port = config.getint('mongodb_port', 27017)
-        database_user = self.get_optional_config(config, 'mongodb_user')
-        database_pwd = self.get_optional_config(config, 'mongodb_pass')
+        database_name = getenv('MONGODB_NAME', config.get('mongodb_name', 'scrapyd_mongolog'))
+        database_host = getenv('MONGODB_HOST', config.get('mongodb_host', 'localhost'))
+        database_port = getenv('MONGODB_PORT', config.getint('mongodb_port', 27017))
+        database_user = getenv('MONDODB_USER', self.get_optional_config(config, 'mongodb_user'))
+        database_pwd = getenv('MONGODB_PASSWORD', self.get_optional_config(config, 'mongodb_pass'))
 
         if database_user and database_pwd:
             conn_str = (
